@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class EmployeeServiceImpl implements EmployeeService{
+public class EmployeeServiceImpl {
 
     private EmployeeRepository employeeRepository;
 
@@ -24,16 +24,21 @@ public class EmployeeServiceImpl implements EmployeeService{
         return employeeRepository.findAll();
     }
 
-    public Optional<Employee> findById(int id) {
-        return employeeRepository.findById(id);
+    public Employee getById(int id) {
+        Optional<Employee> employee = employeeRepository.findById(id);
+        if (employee.isEmpty())
+            throw new RuntimeException("The desired resource does not exist");
+        return employee.get();
     }
-
 
     public void save(Employee theEmployee) {
         employeeRepository.save(theEmployee);
     }
-    
+
     public void deleteById(int id) {
+        Optional<Employee> tempEmployee = employeeRepository.findById(id);
+        if (tempEmployee.isEmpty())
+            throw new RuntimeException("The resource is not present in the database");
         employeeRepository.deleteById(id);
     }
 }

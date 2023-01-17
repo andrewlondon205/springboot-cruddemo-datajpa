@@ -1,7 +1,7 @@
 package com.luv2code.springboot.datajpa.springbootcruddemodatajpa.controller;
 
 import com.luv2code.springboot.datajpa.springbootcruddemodatajpa.entity.Employee;
-import com.luv2code.springboot.datajpa.springbootcruddemodatajpa.service.EmployeeService;
+import com.luv2code.springboot.datajpa.springbootcruddemodatajpa.service.EmployeeServiceImpl;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,7 +16,7 @@ import java.util.Optional;
 @AllArgsConstructor
 public class EmployeeRestController {
 
-    private final EmployeeService employeeService;
+    private final EmployeeServiceImpl employeeService;
 
     @GetMapping("/employee/all")
     public List<Employee> getAllEmployees() {
@@ -25,10 +25,7 @@ public class EmployeeRestController {
 
     @GetMapping("/employee/{id}")
     public ResponseEntity<?> getEmployeeById(@PathVariable int id) {
-        Optional<Employee> theEmployee = employeeService.findById(id);
-        if (theEmployee.isEmpty())
-            throw new RuntimeException("The desired resource does not exist");
-        return new ResponseEntity<>(employeeService.findById(id), HttpStatus.OK);
+        return new ResponseEntity<>(employeeService.getById(id), HttpStatus.OK);
     }
 
     @PostMapping("/addemployee")
@@ -39,9 +36,6 @@ public class EmployeeRestController {
 
     @DeleteMapping("/deleteemployee/{id}")
     public ResponseEntity<?> deleteEmployee(@PathVariable int id) {
-        Optional<Employee> tempEmployee = employeeService.findById(id);
-        if(tempEmployee.isEmpty())
-            throw new RuntimeException("Employee id not found - " + id);
         employeeService.deleteById(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
